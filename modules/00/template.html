@@ -21,6 +21,12 @@
 </div>
 
 
+<!-- Data visualization section -->
+<div id="chartContainer" style="width:100%;height:400px;margin-top:20px;">
+  <canvas id="dataChart"></canvas>
+</div>
+
+
 <script type=module>
 import { Console as CLI } from "endap"
 const consoles = CLI.create("40px");
@@ -29,6 +35,99 @@ const cnt = document.getElementById("cnt1");
 cnt.append(consoles.el);
 
 consoles.ver();
+
+// Initialize chart data - particle simulation metrics
+const particleCounts = [];
+const timeSteps = [];
+
+// Simulate particle data for demonstration
+function simulateParticleData() {
+  const GRAVITY = 55;
+  const FRICTION = 0.10;
+  let count = 5;
+  let vx = 0, vy = 0;
+
+  for (let i = 0; i < 100; i++) {
+    // Simulate physics
+    vx += 0;  // no horizontal acceleration
+    vy += GRAVITY;  // gravity
+    vy *= FRICTION;  // friction
+    count = Math.max(0, count - 0.1);  // particles decrease
+
+    particleCounts.push(count);
+    timeSteps.push(i);
+    if (count <= 0) break;
+  }
+}
+
+// Run simulation
+simulateParticleData();
+
+// Create chart using Chart.js
+const ctx = document.getElementById('dataChart').getContext('2d');
+const dataChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: timeSteps,
+    datasets: [{
+      label: 'Active Particles',
+      data: particleCounts,
+      borderColor: '--4f81bd',
+      backgroundColor: 'rgba(79, 129, 189, 0.2)',
+      tension: 0.1,
+      fill: true,
+      pointRadius: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Particle Simulation Decay Over Time'
+      },
+      legend: {
+        display: true
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Number of Particles'
+        } 
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Time Steps'
+        }
+      }
+    }
+  }
+});
+
+// Console output
+consoles.writeln('Chart initialized with ' + particleCounts.length + ' data points');
+consoles.writeln('Particle simulation data: decaying from ' + particleCounts[0] + ' to ' + (particleCounts[particleCounts.length-1] || 0));
+
+// Add interactive button to regenerate data
+const btn = document.createElement('button');
+btn.innerHTML = 'Regenerate Data';
+btn.style.marginTop = '10px';
+btn.addEventListener('click', () => {
+  // Clear and re-run simulation
+  particleCounts.length = 0;
+  timeSteps.length = 0;
+  simulateParticleData();
+  dataChart.data.labels = timeSteps;
+  dataChart.data.datasets[0].data = particleCounts;
+  dataChart.update();
+  consoles.writeln('Data regenerated with ' + particleCounts.length + ' points');
+});
+
+cnt.append(btn);
 </script>
 
 
