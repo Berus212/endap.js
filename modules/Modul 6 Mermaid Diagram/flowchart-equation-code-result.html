@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang=en-us dir=ltr>
+<head>
+  <link rel='stylesheet' href="/assets/css/style.css">
+</head>
+<body>
+<!-- code begins -->
+
+<script src="/libs/chartjs/4.5.1/chart.umd.min.js" defer></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "endap": "/libs/endap/0.0.4/endap.min.js"
+  }
+}
+</script>
+
+
+<div id="cnt1">
+</div>
+
+
+<script type=module>
+import { Console as CLI } from "endap"
+const consoles = CLI.create("40px");
+
+const cnt = document.getElementById("cnt1");
+cnt.append(consoles.el);
+
+consoles.ver();
+</script>
+
+<pre class="mermaid">
+flowchart  
+  %% pt2
+  subgraph " "
+    direction TB
+    o1b --> C2
+    C2 -- "Y" --> N1 --> O
+    C2 -- "N" --> Nol --> O
+    o2b --> P1 ---> O
+    O --> E
+  end
+
+  %% pt1
+  subgraph " "
+    direction TB
+    B --> I1 --> C1
+    C1 --"Y"--> o2a
+    C1 --"N"--> o1a
+  end
+
+  %% elements
+  B(["Begin"])
+  I1[/"X"/]
+  C1{"X > 0"}
+  C2{"X < 0"}
+  O(("0"))
+  N1[/"Negatif"/]
+  Nol[/"Nol"/]
+  P1[/"Positif"/]
+  E(["End"])
+  
+  %% connectors
+  o1a(("1")):::conn
+  o1b(("1")):::conn
+  o2a(("2")):::conn
+  o2b(("2")):::conn
+  %% classes
+  classDef conn fill:#484, stroke:#040, color:#fff
+</pre>
+
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.8/dist/mermaid.esm.min.mjs";
+
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: "neutral"
+  });
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const element = document.querySelector(".mermaid");
+
+    console.log("ELEMENT:", element);
+    console.log("textContent:", JSON.stringify(element.textContent));
+    console.log("innerHTML:", JSON.stringify(element.innerHTML));
+
+    try {
+      console.log("detectType:",
+        mermaid.detectType(element.textContent)
+      );
+
+      await mermaid.run({
+        nodes: [element]
+      });
+    } catch (error) {
+      console.error("MERMAID ERROR:", error);
+    }
+  });
+</script>
+
+<!-- code ends -->
+</body>
+</html>

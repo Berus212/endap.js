@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang=en-us dir=ltr>
+<head>
+  <link rel='stylesheet' href="/assets/css/style.css">
+</head>
+<body>
+<!-- code begins -->
+
+<script src="/libs/chartjs/4.5.1/chart.umd.min.js" defer></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "endap": "/libs/endap/0.0.4/endap.min.js"
+  }
+}
+</script>
+
+
+<div id="cnt1">
+</div>
+
+
+<script type=module>
+import { Console as CLI } from "endap"
+const consoles = CLI.create("40px");
+
+const cnt = document.getElementById("cnt1");
+cnt.append(consoles.el);
+
+consoles.ver();
+</script>
+
+<pre class="mermaid">
+flowchart
+  %% sg4
+  subgraph " "
+    direction TB
+    o3b --> O1 --> O2 --> E
+  end
+  
+  %% sg3
+  subgraph " "
+    direction TB
+    o2b --> C1
+    C1 -- "Yes"--> P3 --> o4a 
+    C1 -- "No"--> o3a
+  end
+  
+  %% sg2
+  subgraph " "
+    direction TB
+    o1b --> P1 --> P2 --> o2a
+    o4b ---> P2
+  end
+  
+  %% sg1
+  subgraph " "
+    direction TB
+    B --> I1 --> I2 --> o1a
+  end
+
+  %% elements
+  B(["Begin"])
+  I1[/"Input 1"/]
+  I2[/"Input 2"/]
+  P1["Process 1"]
+  P2["Process 2"]
+  P3["Process 3"]
+  C1{"i < n"}
+  O1[/"Output 1"/]
+  O2[/"Output 2"/]
+  E(["End"])
+  
+  %% connectors
+  o1a(("1")):::conn
+  o1b(("1")):::conn
+  o2a(("2")):::conn
+  o2b(("2")):::conn
+  o3a(("3")):::conn
+  o3b(("3")):::conn
+  o4a(("4")):::conn
+  o4b(("4")):::conn
+  
+  %% classes
+  classDef conn fill:#484, stroke:#040, color:#fff
+</pre>
+
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.8/dist/mermaid.esm.min.mjs";
+
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: "neutral"
+  });
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const element = document.querySelector(".mermaid");
+
+    console.log("ELEMENT:", element);
+    console.log("textContent:", JSON.stringify(element.textContent));
+    console.log("innerHTML:", JSON.stringify(element.innerHTML));
+
+    try {
+      console.log("detectType:",
+        mermaid.detectType(element.textContent)
+      );
+
+      await mermaid.run({
+        nodes: [element]
+      });
+    } catch (error) {
+      console.error("MERMAID ERROR:", error);
+    }
+  });
+</script>
+
+<!-- code ends -->
+</body>
+</html>
